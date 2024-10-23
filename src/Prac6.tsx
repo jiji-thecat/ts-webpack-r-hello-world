@@ -1,37 +1,51 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
-const ModalExample = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const modalRef = useRef(null) as any;
-
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
-  };
-
-  useEffect(() => {
-    const handleOutsideClick = (event: any) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleOutsideClick);
-
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, []);
-
+const ButtonComponent = ({ name }: { name: string }) => {
   return (
-    <div>
-      <button onClick={toggleModal}>Open Modal</button>
-      {isOpen && (
-        <div className="modal" ref={modalRef}>
-          <p>This is a modal!</p>
-          <button onClick={toggleModal}>Close Modal</button>
-        </div>
-      )}
-    </div>
+    <>
+      <button>{name}</button>
+      <style>{`
+                    .blue {
+                        background-color: blue;
+                    }
+                    .red {
+                        background-color: red;
+                    }
+                `}</style>
+    </>
   );
 };
 
-export default ModalExample;
+export default function CountryCapitalGame({}) {
+  const data: any = { Germany: 'berlin', Japan: 'Tokyo' };
+
+  const [country, setCountry] = useState<string[]>([]);
+  const [capital, setCapital] = useState<string[]>([]);
+
+  useEffect(() => {
+    const countryArr = [];
+    const capitalArr = [];
+
+    for (const prop in data) {
+      countryArr.push(prop);
+      capitalArr.push(data[prop]);
+    }
+
+    setCountry(countryArr);
+    setCapital(capitalArr);
+  }, []);
+
+  return country
+    .map((val) => <ButtonComponent name={val} />)
+    .concat(capital.map((val) => <ButtonComponent name={val} />));
+}
+// You can also use class components
+// export default class CountryCapitalGame extends React.Component {
+//     constructor(props) {
+//         super(props);
+//     }
+//
+//     render() {
+//         return <div>Your game component</div>;
+//     }
+// }
