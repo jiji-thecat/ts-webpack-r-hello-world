@@ -1,0 +1,14 @@
+[
+  {
+    "id": 0,
+    "title": "What is the capital of Japan?",
+    "options": ["Tokyo", "Paris", "Dublin", "Berlin"],
+    "answer": "Tokyo"
+  },
+  {
+    "id": 1,
+    "title": "What is the capital of France?",
+    "options": ["Tokyo", "Paris", "Dublin", "Berlin"],
+    "answer": "Paris"
+  }
+]

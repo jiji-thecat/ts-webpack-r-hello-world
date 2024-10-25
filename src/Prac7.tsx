@@ -17,7 +17,7 @@ Optional Features:
     Display a list of previous countdowns after resetting.
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { CSSProperties, useState, useEffect, useRef, useCallback } from 'react';
 
 const CountdownTimer = () => {
   const [minutes, setMinutes] = useState(0);
@@ -136,7 +136,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-  },
+  } as CSSProperties,
   timerDisplay: {
     fontSize: '2em',
     marginBottom: '1em',

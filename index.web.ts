@@ -8,7 +8,8 @@ import Prac4 from './src/Prac4';
 import Prac5 from './src/Prac5';
 import Prac6 from './src/Prac6';
 import Prac7 from './src/Prac7';
+import P8 from './src/P8';
 
-AppRegistry.registerComponent('App', () => Prac7);
+AppRegistry.registerComponent('App', () => P8);
 
 AppRegistry.runApplication('App', { rootTag: document.getElementById('root') });
