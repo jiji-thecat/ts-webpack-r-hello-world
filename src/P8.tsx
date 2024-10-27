@@ -32,22 +32,61 @@
 
  */
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+
+// count from TIME to 0
+// When button is pressed then reset to default
+const Timer = ({ duration, id, timerCallback }: { duration: number; id: number; timerCallback: () => void }) => {
+  const [time, setTime] = useState(duration);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      timerCallback();
+      setTime(duration);
+    } else {
+      intervalRef.current = setInterval(() => {
+        setTime((prev) => {
+          if (prev <= 0 && intervalRef.current) {
+            clearInterval(intervalRef.current);
+            timerCallback();
+            return 0;
+          }
+
+          return prev - 1000;
+        });
+      }, 1000);
+    }
+  }, [id]);
+
+  return <div className="timer">{time / 10 ** 3} sec / quiz</div>;
+};
 
 // create a map and pass it to QuizList then set id, value when clicked.
 // when submit button pressed then compare data and map.
 // calculate the score and show it below
 // add reset button and clear map
-const QuizList = ({ data, ansMap, setAnsMap }: { data: any; ansMap: Map<string, string>; setAnsMap: any }) => {
-  const { title, options, id } = data;
+const QuizList = ({
+  data,
+  selectAnsArr,
+  setSelectAnsArr,
+  isSubmit,
+}: {
+  data: any;
+  selectAnsArr: number[];
+  setSelectAnsArr: any;
+  isSubmit: boolean;
+}) => {
+  const { title, options, id, answer } = data;
 
   const onClick = useCallback((e: any) => {
     const val = e.target.getAttribute('data-key');
 
-    setAnsMap((prev: any) => {
-      const map = new Map(prev); // immutable を保持するために、object stateを更新する場合は新しく作り直す。{...prev, foo: hoge} のように。
-      map.set(id, val);
-      return map;
+    setSelectAnsArr((prev: any) => {
+      let newArr = [...prev]; // immutable を保持するために、object stateを更新する場合は新しく作り直す。{...prev, foo: hoge} のように。
+      newArr[id] = parseInt(val);
+      return newArr;
     });
   }, []);
 
@@ -57,7 +96,7 @@ const QuizList = ({ data, ansMap, setAnsMap }: { data: any; ansMap: Map<string, 
       <div className="options">
         {options.map((v: any, i: number) => {
           let className = 'button';
-          className += ansMap.has(id) && parseInt(ansMap.get(id)!) === i ? ' clicked' : '';
+          className += selectAnsArr[id] === i ? ' clicked' : '';
           return (
             <button className={className} onClick={onClick} data-key={i} key={i}>
               {v}
@@ -65,15 +104,23 @@ const QuizList = ({ data, ansMap, setAnsMap }: { data: any; ansMap: Map<string, 
           );
         })}
       </div>
+      {isSubmit && selectAnsArr[id] !== answer && <div className="answer">{options[answer]}</div>}
     </div>
   );
 };
 
 export default () => {
+  /**
+   * {id: 0, title: "what is .."}
+   */
   const [data, setData] = useState<any>([]);
+  // ansData = [1, 1, 2, 3...]
   const [ansData, setAnsData] = useState<any>([]);
-  const [ansMap, setAnsMap] = useState(new Map());
+  // selectAnsArr = [-1, -1, 4, 5];
+  const [selectAnsArr, setSelectAnsArr] = useState<number[]>([]);
   const [score, setScore] = useState(-1);
+  //  const [falseIdArr, setFalseIdArr] = useState<number[]>([]);
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,6 +132,7 @@ export default () => {
           ansDataArr.push(v.answer);
         }
         setAnsData([...ansDataArr]);
+        setSelectAnsArr(new Array(data.length).fill(-1));
         setData(data);
       } catch (e) {
         console.log(e);
@@ -96,18 +144,20 @@ export default () => {
 
   const onClickSubmit = useCallback(() => {
     let score = 0;
-    ansMap.forEach((v, i) => {
-      if (parseInt(v) === ansData[i]) {
+    selectAnsArr.forEach((v, i) => {
+      if (v === ansData[i]) {
         score++;
       }
     });
 
     setScore(score);
-  }, [ansData, ansMap]);
+    setIsSubmit(true);
+  }, [ansData, selectAnsArr]);
 
   const onClickReset = useCallback(() => {
-    setAnsMap(new Map());
+    setSelectAnsArr(new Array(data.length).fill(-1));
     setScore(-1);
+    setIsSubmit(false);
   }, []);
 
   return (
@@ -115,7 +165,13 @@ export default () => {
       <div className="body">
         <div className="upper">
           {data.map((v: any, id: any) => (
-            <QuizList data={v} ansMap={ansMap} setAnsMap={setAnsMap} key={id} />
+            <QuizList
+              data={v}
+              selectAnsArr={selectAnsArr}
+              setSelectAnsArr={setSelectAnsArr}
+              isSubmit={isSubmit}
+              key={id}
+            />
           ))}
         </div>
         <div className="footer">
@@ -150,7 +206,10 @@ export default () => {
             margin-left: 10px;
          }
          .button.clicked {
-            background-color: red;
+            background-color: aqua;
+         }
+         .button.notClicked {
+            pointer-events: none;
          }
          .quiz {
             display: flex;
@@ -164,6 +223,11 @@ export default () => {
          .score {
             font-size: xx-large;
             font-weight: bold;
+         }
+         .answer {
+            margin-left: 10px;
+            font-size: 27px;
+            color: red;
          }
       `}</style>
     </>
