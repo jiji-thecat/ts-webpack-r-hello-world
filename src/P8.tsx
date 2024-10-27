@@ -38,14 +38,16 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 // when submit button pressed then compare data and map.
 // calculate the score and show it below
 // add reset button and clear map
-const QuizList = ({ data, setAnsMap }: { data: any; setAnsMap: any }) => {
+const QuizList = ({ data, ansMap, setAnsMap }: { data: any; ansMap: Map<string, string>; setAnsMap: any }) => {
   const { title, options, id } = data;
 
   const onClick = useCallback((e: any) => {
-    const val = e.target.getAttribute('data-val');
+    const val = e.target.getAttribute('data-key');
+
     setAnsMap((prev: any) => {
-      prev.set(id, val);
-      return prev;
+      const map = new Map(prev); // immutable を保持するために、object stateを更新する場合は新しく作り直す。{...prev, foo: hoge} のように。
+      map.set(id, val);
+      return map;
     });
   }, []);
 
@@ -53,11 +55,15 @@ const QuizList = ({ data, setAnsMap }: { data: any; setAnsMap: any }) => {
     <div className="quiz">
       <div className="title">{title}</div>
       <div className="options">
-        {options.map((v: any, i: number) => (
-          <button className="button" onClick={onClick} data-val={v} key={i}>
-            {v}
-          </button>
-        ))}
+        {options.map((v: any, i: number) => {
+          let className = 'button';
+          className += ansMap.has(id) && parseInt(ansMap.get(id)!) === i ? ' clicked' : '';
+          return (
+            <button className={className} onClick={onClick} data-key={i} key={i}>
+              {v}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -91,7 +97,7 @@ export default () => {
   const onClickSubmit = useCallback(() => {
     let score = 0;
     ansMap.forEach((v, i) => {
-      if (v === ansData[i]) {
+      if (parseInt(v) === ansData[i]) {
         score++;
       }
     });
@@ -109,7 +115,7 @@ export default () => {
       <div className="body">
         <div className="upper">
           {data.map((v: any, id: any) => (
-            <QuizList data={v} setAnsMap={setAnsMap} key={id} />
+            <QuizList data={v} ansMap={ansMap} setAnsMap={setAnsMap} key={id} />
           ))}
         </div>
         <div className="footer">
@@ -142,6 +148,9 @@ export default () => {
          }
          .button {
             margin-left: 10px;
+         }
+         .button.clicked {
+            background-color: red;
          }
          .quiz {
             display: flex;
