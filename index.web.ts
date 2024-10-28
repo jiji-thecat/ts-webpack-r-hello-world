@@ -9,7 +9,8 @@ import Prac5 from './src/Prac5';
 import Prac6 from './src/Prac6';
 import Prac7 from './src/Prac7';
 import P8 from './src/P8';
+import P9 from './src/P9';
 
-AppRegistry.registerComponent('App', () => P8);
+AppRegistry.registerComponent('App', () => P9);
 
 AppRegistry.runApplication('App', { rootTag: document.getElementById('root') });
