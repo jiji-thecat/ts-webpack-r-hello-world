@@ -7,6 +7,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 const TIME = 10000;
 
+/**
+ * refを使う理由：refでidを保管することで、refを更新をしてもrerenderが走らない。stateでidを管理しようとするとrerenderが走り、パフォーマンス悪くなる。
+ * refはmutable objectだけど、ref.currentはimmutable object.
+ */
 export default () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [timer, setTimer] = useState(TIME);
