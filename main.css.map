@@ -1,0 +1,1 @@
+{"version":3,"file":"main.css","mappings":";;;AAAA;;;;;;;;GAQG","sources":["webpack://ts-webpack-rn/./src/styles.css"],"sourcesContent":["/* body {\n  flex: 1;\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center;\n  background-color: pink;\n  height: 100vh;\n} */\n"],"names":[],"sourceRoot":""}
