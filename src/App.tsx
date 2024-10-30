@@ -12,10 +12,19 @@ function LikeButton() {
 
   return (
     <>
-      <button className={cx('like-button', { liked })} onClick={handleClick}>
-        Like | <span className="likes-counter">{likes}</span>
-      </button>
+      <div className="body">
+        <button className={cx('like-button', { liked })} onClick={handleClick}>
+          Like | <span className="likes-counter">{likes}</span>
+        </button>
+      </div>
       <style>{`
+        .body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          flex-direction: column;
+        }
         .like-button {
           font-size: 1rem;
           padding: 5px 10px;
