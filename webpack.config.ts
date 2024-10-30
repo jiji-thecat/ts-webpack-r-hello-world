@@ -11,7 +11,7 @@ module.exports = {
       directory: './dist',
     },
   },
-  entry: ['./index.web.ts', './src/styles.css'],
+  entry: ['./index.web.tsx', './src/styles.css'],
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
