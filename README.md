@@ -2,7 +2,7 @@
 
 ## Description
 
-[github pages sample](https://jiji-thecat.github.io/ts-webpack-rn-hello-world/)
+[github pages sample](https://jiji-thecat.github.io/ts-webpack-r-hello-world/)
 
 This project is for easily creating TypeScript + React Native for Web + webpack env on your local. Also you can host your app on github pages.
 

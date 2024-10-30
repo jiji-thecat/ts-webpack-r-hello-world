@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AppRegistry } from 'react-native';
 
-const map = ['App', 'Prac1', 'Prac2', 'Prac3', 'Prac4', 'Prac5', 'Prac6', 'Prac7', 'P8', 'P9'];
+const map = ['App', 'Prac1', 'Prac2', 'Prac3', 'Prac4', 'Prac5', 'Prac6', 'Prac7', 'P8', 'P9', 'P10'];
 
 const CurrentComponent = ({ comp }: { comp: any }) => {
   const [App, setApp] = useState<React.ComponentType | null>(null);
 
   useEffect(() => {
     const helper = async () => {
+      // lazy loading
       const app = await import(`./src/${comp}`);
       setApp(() => app.default);
     };
