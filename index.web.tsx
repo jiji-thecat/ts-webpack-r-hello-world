@@ -29,7 +29,7 @@ const Root = () => {
     <>
       <div className="body root">
         <select className="select" value={currentOption} onChange={onChange}>
-          {map.reverse().map((v, i) => (
+          {map.map((v, i) => (
             <option value={v} key={i}>
               {v}
             </option>
