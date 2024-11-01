@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AppRegistry } from 'react-native';
 
-const map = ['App', 'Prac1', 'Prac2', 'Prac3', 'Prac4', 'Prac5', 'Prac6', 'Prac7', 'P8', 'P9', 'P10'];
+const map = ['App', 'Prac1', 'Prac2', 'Prac3', 'Prac4', 'Prac5', 'Prac6', 'Prac7', 'P8', 'P9', 'P10', 'P11'];
 
 const CurrentComponent = ({ comp }: { comp: any }) => {
   const [App, setApp] = useState<React.ComponentType | null>(null);
