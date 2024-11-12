@@ -20,31 +20,32 @@ export default () => {
       </div>
       <style>
         {`
-        .body {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
+          .body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            gap: 10px;
+
           }
-        .dot{
-          width: 50px;
-          height: 50px;
-          background-color: black;
-          border-radius: 50%;
-          margin: 10px;
-          animation: 0.5s  alternate infinite bounce;
+          .dot{
+            background-color: black;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            animation: 0.5s alternate infinite anim;
           }
-        .dot:nth-child(2) {
-          animation-delay: 100ms;
-        }
-        .dot:nth-child(3) {
-          animation-delay: 200ms;
-        }
-        @keyframes bounce {
-          100% {
-            translate: 0 -10px;
+          .dot:nth-child(2){
+            animation-delay: 100ms;
           }
-        }
+          .dot:nth-child(3){
+            animation-delay: 200ms;
+          }
+          @keyframes anim {
+            100% {
+              translate: 0 -10px;
+            }
+          }
         `}
       </style>
     </>
