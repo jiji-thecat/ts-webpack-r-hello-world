@@ -1,33 +1,62 @@
 /**
- * ### React Challenge: "Auto-Save Notes with Search and Filter"
+ * 
+Question: Persistent Counter with localStorage
 
-**Objective**  
-Create a note-taking component in React where users can add, edit, and delete notes. Each note should auto-save to `localStorage` after every edit, and users should be able to search and filter through their notes.
+Create a simple React component that displays a counter. The counter should have two buttons:
 
-**Requirements**
-1. **Note-Taking Functionality**:
-   - Implement a form where users can add a new note with a title and content.
-   - Each note should be editable, and any edits should be saved automatically to `localStorage`.
-   - Allow users to delete notes.
+    Increment - increases the counter by 1
+    Decrement - decreases the counter by 1
 
-2. **Auto-Save**:
-   - The application should save each note to `localStorage` immediately after it’s created or edited.
-   - When the page is refreshed, notes should persist by loading from `localStorage`.
+The counter's value should persist across page reloads by using localStorage. When the page is reloaded, the component should retrieve the previous counter value from localStorage and display it.
+Requirements
 
-3. **Search and Filter**:
-   - Implement a search bar that filters notes based on the content of the note or the title.
-   - Users should be able to filter notes by creation date or edit date in ascending or descending order.
-
-4. **Clear All**:
-   - Provide a "Clear All" button to delete all notes from both the UI and `localStorage`.
-
-5. **Component Structure**:
-   - Use multiple components (e.g., `Note`, `NoteList`, `NoteEditor`) to keep the code modular.
-
-**Design Constraints**:
-- Use only React hooks (`useState`, `useEffect`) for managing state and persistence with `localStorage`.
-- Do not use any external libraries except for basic styling if desired.
-
-**Bonus Challenge**  
-Implement an "Undo" feature that allows the user to undo the last deletion.
+    When the counter is updated (by clicking the Increment or Decrement buttons), save the updated counter value to localStorage.
+    On initial render, check if there’s a saved counter value in localStorage. If it exists, set the counter to this value; otherwise, initialize it to 0.
  */
+
+import { useState, useEffect, useCallback } from 'react';
+
+export default () => {
+  const [count, setCount] = useState<number>(parseInt(localStorage.getItem('count') ?? '0'));
+
+  useEffect(() => {
+    localStorage.setItem('count', count.toString());
+  }, [count]);
+
+  const onClickIncrement = useCallback(() => {
+    setCount((prev) => prev + 1);
+  }, [count]);
+
+  const onClickDecrement = useCallback(() => {
+    setCount((prev) => prev - 1);
+  }, [count]);
+
+  return (
+    <>
+      <div className="body">
+        <div className="header">{count}</div>
+        <div className="footer">
+          <button className="button" onClick={onClickIncrement}>
+            Increment
+          </button>
+          <button className="button" onClick={onClickDecrement}>
+            Decrement
+          </button>
+        </div>
+      </div>
+      <style>{`
+      .body {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         flex-direction: column;
+         height: 100vh;
+      }
+      .header {
+         font-size: 30px;
+         font-weight: bold;
+      }
+      `}</style>
+    </>
+  );
+};
