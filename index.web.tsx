@@ -19,6 +19,7 @@ const map = [
   'P14',
   'P15',
   'P16',
+  'P17',
 ];
 
 const CurrentComponent = ({ comp }: { comp: any }) => {

@@ -5,9 +5,9 @@
 import { useState, useCallback } from 'react';
 
 const tabArr = [
-  { id: 0, content: 'Tab0' },
-  { id: 1, content: 'Tab1' },
-  { id: 2, content: 'Tab2' },
+  { id: 0, title: 'Tab0', content: 'this is tab 0' },
+  { id: 1, title: 'Tab1', content: 'this is tab 1' },
+  { id: 2, title: 'Tab2', content: 'this is tab 2' },
 ];
 
 export default () => {
@@ -24,7 +24,7 @@ export default () => {
         <div className="header">
           {tabArr.map((v, i) => (
             <button className="button" onClick={onClick} data-id={v.id} key={i}>
-              {v.content}
+              {v.title}
             </button>
           ))}
         </div>
@@ -36,6 +36,7 @@ export default () => {
             display: flex;
             align-items: center;
             height: 100vh;
+            flex-direction: column;
         }
         `}
       </style>
