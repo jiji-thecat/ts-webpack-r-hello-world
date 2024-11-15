@@ -31,3 +31,14 @@ Create a note-taking component in React where users can add, edit, and delete no
 **Bonus Challenge**  
 Implement an "Undo" feature that allows the user to undo the last deletion.
  */
+
+import { useState, useEffect, useCallback } from 'react';
+
+export default () => {
+  return (
+    <>
+      <div>P15</div>
+      <style></style>
+    </>
+  );
+};
