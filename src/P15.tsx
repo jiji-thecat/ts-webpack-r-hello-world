@@ -30,14 +30,70 @@ Create a note-taking component in React where users can add, edit, and delete no
 
 **Bonus Challenge**  
 Implement an "Undo" feature that allows the user to undo the last deletion.
+
+creation | search
+
+tab = ["creation", "search"]
+
+
+- creation page
+-- input area title
+-- inpute area content
+-- post button
+
+- search page
+-- date filter asc, dsc
+-- edit each note(input)
+-- clear all button
+-- get the note list from local storage render each from list
+
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+
+const TABS = ['Create', 'Search'];
+const CREATE_TAB = 0;
+const SEARCH_TAB = 1;
+
+const SearchComponent = () => {
+  return <>SearchComponent</>;
+};
+
+const CreateComponent = () => {
+  return <>CreateComponent</>;
+};
 
 export default () => {
+  const [tabs, setTabs] = useState([]);
+  const [selectTab, setSelectTab] = useState(0);
+
+  const ContentComponent = useMemo(() => {
+    switch (selectTab) {
+      case SEARCH_TAB:
+        return <SearchComponent />;
+      case CREATE_TAB:
+      default:
+        return <CreateComponent />;
+    }
+  }, [selectTab]);
+
+  const onClickPost = useCallback((e: any) => {
+    const index = e.target.getAttribute('data-index');
+    setSelectTab(parseInt(index));
+  }, []);
+
   return (
     <>
-      <div>P15</div>
+      <div className="body">
+        <div className="header">
+          {TABS.map((v, i) => (
+            <button onClick={onClickPost} key={i} data-index={i}>
+              {v}
+            </button>
+          ))}
+        </div>
+        <div className="footer">{ContentComponent}</div>
+      </div>
       <style></style>
     </>
   );
