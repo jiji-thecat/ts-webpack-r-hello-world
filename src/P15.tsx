@@ -41,6 +41,9 @@ tab = ["creation", "search"]
 -- inpute area content
 -- post button
 
+- data(title, content, date)
+- json to string
+
 - search page
 -- date filter asc, dsc
 -- edit each note(input)
@@ -49,7 +52,7 @@ tab = ["creation", "search"]
 
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 const TABS = ['Create', 'Search'];
 const CREATE_TAB = 0;
@@ -59,8 +62,41 @@ const SearchComponent = () => {
   return <>SearchComponent</>;
 };
 
+//const dataArr = [{ date: '', title: '', content: '' }];
+// Save it on localstorage
 const CreateComponent = () => {
-  return <>CreateComponent</>;
+  const [data, setData] = useState<string>(localStorage.getItem('data') ?? '[]');
+  const inputTitleRef = useRef<HTMLInputElement | null>(null);
+  const inputContentRef = useRef<HTMLInputElement | null>(null);
+
+  const onClickPost = useCallback(() => {
+    if (inputTitleRef.current && inputContentRef.current) {
+      const date = new Date();
+      const newData = {
+        date: date.getTime(),
+        title: inputTitleRef.current.value,
+        content: inputContentRef.current.value,
+      };
+
+      /*      const currentData = JSON.parse(data).push(newData);
+      localStorage.setItem('data', JSON.stringify(currentData));
+      setData(currentData);
+      */
+    } else {
+      return;
+    }
+
+    inputTitleRef.current.value = '';
+    inputContentRef.current.value = '';
+  }, []);
+
+  return (
+    <div className="createBody">
+      <input ref={inputTitleRef} className="input title"></input>
+      <input ref={inputContentRef} className="input content"></input>
+      <button onClick={onClickPost}>Post</button>
+    </div>
+  );
 };
 
 export default () => {
@@ -82,6 +118,7 @@ export default () => {
     setSelectTab(parseInt(index));
   }, []);
 
+  //  console.log(localStorage.getItem('data'));
   return (
     <>
       <div className="body">
@@ -94,7 +131,17 @@ export default () => {
         </div>
         <div className="footer">{ContentComponent}</div>
       </div>
-      <style></style>
+      <style>
+        {`
+            .body {
+               display: flex;
+               flex-direction: column;
+               height: 100vh;
+            }
+            .header {
+            }
+         `}
+      </style>
     </>
   );
 };
