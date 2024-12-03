@@ -58,16 +58,66 @@ const TABS = ['Create', 'Search'];
 const CREATE_TAB = 0;
 const SEARCH_TAB = 1;
 
+/**
+ * When to getItem
+ * - refresh
+ * - filter
+ * - search
+ */
 const SearchComponent = () => {
-  return <>SearchComponent</>;
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const currentData = JSON.parse(localStorage.getItem('noteData') ?? '[]');
+    setData(currentData);
+  }, []);
+
+  return (
+    <>
+      <div className="search body">
+        <div className="search header">
+          <input type="search"></input>
+          <button>Search</button>
+        </div>
+        <div className="search footer">
+          {data.map((v: any, i: any) => (
+            <>
+              <input
+                type="text"
+                key={`title-${i}`}
+                value={v.title}
+                onChange={() => {
+                  console.log('changed');
+                }}
+              ></input>
+              <input type="text" key={`content-${i}`} value={v.content}></input>
+            </>
+          ))}
+        </div>
+      </div>
+      <style>
+        {`
+        .search.footer {
+          display: flex;
+          flex-direction: column;
+        }
+      `}
+      </style>
+    </>
+  );
 };
 
 //const dataArr = [{ date: '', title: '', content: '' }];
 // Save it on localstorage
 const CreateComponent = () => {
-  const [data, setData] = useState<string>(localStorage.getItem('data') ?? '[]');
   const inputTitleRef = useRef<HTMLInputElement | null>(null);
   const inputContentRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    return () => {
+      localStorage.clear();
+    };
+  }, []);
 
   const onClickPost = useCallback(() => {
     if (inputTitleRef.current && inputContentRef.current) {
@@ -78,10 +128,9 @@ const CreateComponent = () => {
         content: inputContentRef.current.value,
       };
 
-      /*      const currentData = JSON.parse(data).push(newData);
-      localStorage.setItem('data', JSON.stringify(currentData));
-      setData(currentData);
-      */
+      const currentData = JSON.parse(localStorage.getItem('noteData') ?? '[]');
+      currentData.push(newData);
+      localStorage.setItem('noteData', JSON.stringify(currentData));
     } else {
       return;
     }
@@ -109,9 +158,31 @@ export default () => {
         return <SearchComponent />;
       case CREATE_TAB:
       default:
-        return <CreateComponent />;
+        return <SearchComponent />;
     }
   }, [selectTab]);
+
+  useEffect(() => {
+    const date = new Date();
+
+    const obj = [
+      {
+        date: date.getTime(),
+        title: 'title1',
+        content: 'content1',
+      },
+      {
+        date: date.getTime(),
+        title: 'title2',
+        content: 'content2',
+      },
+    ];
+    localStorage.setItem('noteData', JSON.stringify(obj));
+
+    () => {
+      localStorage.clear();
+    };
+  }, []);
 
   const onClickPost = useCallback((e: any) => {
     const index = e.target.getAttribute('data-index');
