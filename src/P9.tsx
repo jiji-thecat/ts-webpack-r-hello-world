@@ -8,24 +8,34 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 const TIME = 10000;
 
 /**
+ * ---
  * refを使う理由：refでidを保管することで、refを更新をしてもrerenderが走らない。stateでidを管理しようとするとrerenderが走り、パフォーマンス悪くなる。
  * refはmutable objectだけど、ref.currentはimmutable object.
+ *
+ * ポイントは、idRef.currentにsetIntervalのidを入れておく。
+ * setIntervalの中では、setCountを実行するが、その中で、もしprev<=0の場合、alertを出したいので、clearIntervalをする。countはdefaultに戻したいので、
+ * TIMEを返す。
+ * もしprev>0の場合は、ただcountを減らしたいだけなので、prev-1000をする。
+ * setIntervalは、intervalごとにコードを実行する関数のため、timeに1000を指定して、1秒ごとにcountを計算する。
+ *
+ * またボタンを押されたら、タイマーリセットとある。onClickでは、idRef.currentがあれば、クリック２度目以降なので、タイマーをリセットする。
+ * clearIntervalして、setCount(TIME)を実行する。このあとに上記で述べた、setInterval〜の実装がまた繰り返される。
  */
 export default () => {
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const [timer, setTimer] = useState(TIME);
+  const idRef = useRef<NodeJS.Timeout | null>(null);
+  const [count, setCount] = useState(TIME);
 
   const onClick = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      setTimer(TIME);
+    if (idRef.current) {
+      clearInterval(idRef.current);
+      setCount(TIME);
     }
 
-    timerRef.current = setInterval(() => {
-      setTimer((prev) => {
-        if (prev <= 0 && timerRef.current) {
-          clearTimeout(timerRef.current);
-          alert("Time's up!");
+    idRef.current = setInterval(() => {
+      setCount((prev) => {
+        if (prev <= 0 && idRef.current) {
+          clearInterval(idRef.current);
+          alert("time's up");
           return TIME;
         }
 
@@ -37,18 +47,18 @@ export default () => {
   return (
     <>
       <div className="body">
-        <div>{timer / 10 ** 3}</div>
-        <button onClick={onClick}>{TIME / 10 ** 3}</button>
+        <button onClick={onClick}>{Math.trunc(count / 1000)}</button>
       </div>
-      <style>{`
-        .body {
+      <style>
+        {`
+          .body{
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            flex-direction: column;
-        }
-      `}</style>
+          }
+        `}
+      </style>
     </>
   );
 };
