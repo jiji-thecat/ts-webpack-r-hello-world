@@ -60,7 +60,7 @@ Let me know if you need more hints or clarifications!
 import { useEffect, useState, useCallback, useRef } from 'react';
 const mockData = ['React', 'Redux', 'React Native', 'Vue', 'Angular', 'Svelte'];
 
-const fetchSuggestions = (query: any) => {
+const fetchSuggestions = (query: string): Promise<string[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(mockData.filter((item) => item.toLowerCase().includes(query.toLowerCase())));
@@ -68,32 +68,34 @@ const fetchSuggestions = (query: any) => {
   });
 };
 
-// const debounce = (func: any, delay: number) => {
-//   let timer;
-
-//   return () => {
-//     clearTimeout(timer);
-//     timer = setTimeout(() => {}, 300);
-//   };
-// };
+const debounce = (func: () => void, delay: number) => {
+  let timer: NodeJS.Timeout;
+  return () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => func(), delay);
+  };
+};
 
 export default () => {
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState<string[]>([]);
   const [query, setQuery] = useState('');
 
-  const debounce = useCallback(async () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      // await fetchSuggestions(query);
-    }, 3000);
-  }, []);
+  const fetchDebounced = useCallback(
+    () =>
+      debounce(async () => {
+        if (query.trim()) {
+          const result = await fetchSuggestions(query);
+          setOptions(result);
+        } else {
+          setOptions([]);
+        }
+      }, 300),
+    [query]
+  );
 
   useEffect(() => {
-    debounce();
+    const exec = fetchDebounced();
+    exec();
   }, [query]);
 
   const onChange = useCallback((e: any) => {
@@ -123,3 +125,68 @@ export default () => {
     </>
   );
 };
+
+/**
+ import React, { useState, useEffect } from "react";
+
+// Mock data and API function
+const mockData = ["React", "Redux", "React Native", "Vue", "Angular", "Svelte"];
+
+const fetchSuggestions = (query: string): Promise<string[]> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockData.filter((item) => item.toLowerCase().includes(query.toLowerCase())));
+    }, 500); // Simulating API delay
+  });
+};
+
+// Debounce function
+const debounce = <T extends (...args: any[]) => void>(func: T, delay: number): T => {
+  let timer: NodeJS.Timeout;
+  return ((...args: Parameters<T>) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => func(...args), delay);
+  }) as T;
+};
+
+// Main Component
+const SearchWithDebounce: React.FC = () => {
+  const [query, setQuery] = useState<string>(""); // Search query
+  const [suggestions, setSuggestions] = useState<string[]>([]); // Suggestions list
+
+  // Debounced function to fetch suggestions
+  const fetchDebouncedSuggestions = debounce(async (q: string) => {
+    if (q.trim()) {
+      const results = await fetchSuggestions(q);
+      setSuggestions(results);
+    } else {
+      setSuggestions([]); // Clear suggestions if input is empty
+    }
+  }, 300);
+
+  // Effect to call debounced fetch function on query change
+  useEffect(() => {
+    fetchDebouncedSuggestions(query);
+  }, [query]);
+
+  return (
+    <div>
+      <input
+        type="text"
+        placeholder="Search..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <ul>
+        {suggestions.map((suggestion, index) => (
+          <li key={index}>{suggestion}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default SearchWithDebounce;
+
+
+ */
