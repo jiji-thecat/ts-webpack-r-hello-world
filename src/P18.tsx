@@ -57,7 +57,7 @@ Deliverables
 
 Let me know if you need more hints or clarifications!
  */
-import { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 const mockData = ['React', 'Redux', 'React Native', 'Vue', 'Angular', 'Svelte'];
 
 const fetchSuggestions = (query: string): Promise<string[]> => {
