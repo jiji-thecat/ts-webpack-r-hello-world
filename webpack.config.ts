@@ -32,7 +32,6 @@ module.exports = {
               plugins: ['react-native-web'],
             },
           },
-          ,
           { loader: 'ts-loader' },
         ],
       },

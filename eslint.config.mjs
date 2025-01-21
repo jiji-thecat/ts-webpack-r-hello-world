@@ -34,6 +34,7 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
       'react/display-name': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
     },
   },
 ];

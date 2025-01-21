@@ -2,7 +2,7 @@
  * tab creation
  */
 
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 
 const tabArr = [
   { id: 0, title: 'Tab0', content: 'this is tab 0' },

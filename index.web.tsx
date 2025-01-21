@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AppRegistry } from 'react-native';
 
 const map = [
@@ -24,10 +24,27 @@ const map = [
   'P19',
   'P20',
   'P21',
+  'P22',
+  //'P23',
+];
+
+const obj = { text: 'hello world', value: 123, config: { max: 1, min: -1 } };
+const dataP22 = [
+  {
+    title: 'Home',
+  },
+  {
+    title: 'Services',
+    subItems: ['Cooking', 'Cleaning'],
+  },
+  {
+    title: 'Contact',
+    subItems: ['Phone', 'Mail'],
+  },
 ];
 
 const CurrentComponent = ({ comp }: { comp: any }) => {
-  const [App, setApp] = useState<React.ComponentType | null>(null);
+  const [App, setApp] = useState<any>(null);
 
   useEffect(() => {
     const helper = async () => {
@@ -38,7 +55,7 @@ const CurrentComponent = ({ comp }: { comp: any }) => {
     helper();
   }, [comp]);
 
-  return App !== null ? <App /> : <></>;
+  return App !== null ? <App menuConfig={dataP22} /> : <></>;
 };
 
 const Root = () => {

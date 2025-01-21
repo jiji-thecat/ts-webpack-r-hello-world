@@ -52,7 +52,7 @@ tab = ["creation", "search"]
 
  */
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 const TABS = ['Create', 'Search'];
 const CREATE_TAB = 0;
