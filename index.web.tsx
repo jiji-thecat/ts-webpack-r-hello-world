@@ -26,6 +26,7 @@ const map = [
   'P21',
   'P22',
   //'P23',
+  'P24',
 ];
 
 const obj = { text: 'hello world', value: 123, config: { max: 1, min: -1 } };
